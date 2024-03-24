@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="false" scanPeriod="10 seconds">
+
+    <!--
+        1.configuration是配置的根节点, scan表示是否要以scanPeriod的时间间隔扫描日志配置文件,当变更时进行重新加载
+        2.conversionRule 自定义一个日志字段, 并使用指定的converterClass对日志进行转化
+        3.property 定义一个日志配置文件的属性字段, 后续可以引用这个属性. property有作用范围, 默认是只在当前文件中有效
+            可以使用 ${ }的方式,引入springboot的配置信息,
+            也可以使用${ :- }的方式, :- 后的内容是没有获取的到springboot的配置后的默认值
+        4. appender 日志的输出方式, 负责日志的输出
+        5. encoder 负责将日志事件转化为可以输出的字节数组
+            默认的encoder是 PatternLayoutEncoder, 它将我们提供日志的pattern格式, 转为日志文本的字节数组
+        6. logger 定义不同日志logger的输出级别和输出方式.
+            默认情况下日志事件会逐渐向上层的logger传递, 当logger有对应的appender时日志将被appender输出,
+            root为最顶级的logger
+    -->
+
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wEx"
+                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%-5p) %clr(${PID:-}){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+
+    <property name="log.path" value="${log.path:-logs}"/>
+    <property name="log.maxHistory" value="${log.maxHistory:-30}"/>
+    <property name="log.maxFileSize" value="${log.maxFileSize:-100MB}"/>
+
+    <property name="FILE_LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5p %logger - %m%n%ex"/>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/application.log</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/application-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>${log.maxHistory}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.maxFileSize}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>
