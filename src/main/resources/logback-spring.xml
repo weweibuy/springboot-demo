@@ -3,14 +3,15 @@
 
     <!--
         1.configuration是配置的根节点, scan表示是否要以scanPeriod的时间间隔扫描日志配置文件,当变更时进行重新加载
-        2.conversionRule 自定义一个日志字段, 并使用指定的converterClass对日志进行转化
+        2.conversionRule 自定义一个日志的pattern字段, 并使用指定的converterClass对日志进行转化
         3.property 定义一个日志配置文件的属性字段, 后续可以引用这个属性. property有作用范围, 默认是只在当前文件中有效
-            可以使用 ${ }的方式,引入springboot的配置信息,
-            也可以使用${ :- }的方式, :- 后的内容是没有获取的到springboot的配置后的默认值
-        4. appender 日志的输出方式, 负责日志的输出
-        5. encoder 负责将日志事件转化为可以输出的字节数组
+            可以使用 ${ }的方式,引入java -D的变量信息,
+            也可以使用${ :- }的方式, :- 后的内容是没有获取的到java -D变量后的默认值
+        4. springProperty 与property类似, 读取的是springboot的配置信息
+        5. appender 日志的输出方式, 负责日志的输出
+        6. encoder 负责将日志事件转化为可以输出的字节数组
             默认的encoder是 PatternLayoutEncoder, 它将我们提供日志的pattern格式, 转为日志文本的字节数组
-        6. logger 定义不同日志logger的输出级别和输出方式.
+        7. logger 定义不同日志logger的输出级别和输出方式.
             默认情况下日志事件会逐渐向上层的logger传递, 当logger有对应的appender时日志将被appender输出,
             root为最顶级的logger
     -->
