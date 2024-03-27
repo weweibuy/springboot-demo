@@ -14,6 +14,7 @@
         7. logger 定义不同日志logger的输出级别和输出方式.
             默认情况下日志事件会逐渐向上层的logger传递, 当logger有对应的appender时日志将被appender输出,
             root为最顶级的logger
+        8. springProfile 可以匹配springboot的环境信息
     -->
 
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
@@ -38,12 +39,39 @@
     <property name="FILE_LOG_PATTERN"
               value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5p %logger - %m%n%ex"/>
 
+    <springProperty name="app_name" source="spring.application.name"/>
+
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.path}/application.log</file>
-        <encoder>
-            <pattern>${FILE_LOG_PATTERN}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
+        <springProfile name="!prod">
+            <encoder>
+                <pattern>${FILE_LOG_PATTERN}</pattern>
+                <charset>UTF-8</charset>
+            </encoder>
+        </springProfile>
+
+        <springProfile name="prod">
+            <encoder charset="UTF-8" class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                <providers>
+                    <!-- LoggingEventPatternJsonProvider -->
+                    <pattern>
+                        <pattern>
+                            {
+                            "app_name":"${app_name}",
+                            "timestamp":"%d{yyyy-MM-dd HH:mm:ss.SSS}",
+                            "thread":"%thread",
+                            "level":"%p",
+                            "logger":"%logger",
+                            "message":"%m",
+                            "exception":"%ex"
+                            }
+                        </pattern>
+                    </pattern>
+                </providers>
+            </encoder>
+        </springProfile>
+
+
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${log.path}/application-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <maxHistory>${log.maxHistory}</maxHistory>
@@ -54,8 +82,13 @@
     </appender>
 
 
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
     <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </root>
 
