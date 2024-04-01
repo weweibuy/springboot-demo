@@ -22,7 +22,7 @@
                     converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
 
     <property name="CONSOLE_LOG_PATTERN"
-              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%-5p) %clr(${PID:-}){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"/>
+              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%-5p) %clr(${PID:-}){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} [%X{uid},%X{tid}] %clr(:){faint} %m%n%wEx"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -37,7 +37,7 @@
     <property name="log.maxFileSize" value="${log.maxFileSize:-100MB}"/>
 
     <property name="FILE_LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5p %logger - %m%n%ex"/>
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5p %logger [%X{uid},%X{tid}] - %m%n%ex"/>
 
     <springProperty name="app_name" source="spring.application.name"/>
 
@@ -62,6 +62,8 @@
                             "thread":"%thread",
                             "level":"%p",
                             "logger":"%logger",
+                            "uid":"%X{uid}",
+                            "tid":"%X{tid}",
                             "message":"%m",
                             "exception":"%ex"
                             }
