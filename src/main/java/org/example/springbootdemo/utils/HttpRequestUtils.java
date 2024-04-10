@@ -4,6 +4,7 @@ import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpHeaders;
 
 /**
  * @date 2024/3/30
@@ -39,6 +40,17 @@ public final class HttpRequestUtils {
             return ip;
         }
         return request.getRemoteAddr();
+    }
+
+    /**
+     * 是否包含请体
+     *
+     * @param request
+     * @return
+     */
+    public static boolean isIncludePayload(HttpServletRequest request) {
+        return request.getContentLength() > 0
+                || "chunked".equals(request.getHeader(HttpHeaders.TRANSFER_ENCODING));
     }
 
 }
