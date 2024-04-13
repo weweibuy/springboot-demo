@@ -3,3 +3,22 @@ spring:
     active: ${mvn.profile.active}
   application:
     name: demo-application
+
+web:
+  log:
+    http:
+      - path: /demo
+        methods: GET
+        log:
+          disable-req: true
+          disable-resp: true
+      - path: /demo/form
+        methods: POST
+        log:
+          disable-req-body: true
+          disable-resp-body: true
+      - path: /demo/json
+        methods: POST
+        log:
+          log-req-header: Content-Type,Content-Length
+          log-resp-header: Content-Type

@@ -4,8 +4,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.example.springbootdemo.config.properties.WebLogProperties;
+import org.example.springbootdemo.utils.HttpRequestUtils;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 
 /**
@@ -15,44 +18,57 @@ import java.io.IOException;
 @Slf4j
 public final class HttpReqLogger {
 
-    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    public static void logReq(HttpServletRequest request, WebLogProperties.LogProperties logProperties) {
+        // 判断配置是否输出请求日志
+        if (logProperties != null && Boolean.TRUE.equals(logProperties.getDisableReq())) {
+            return;
+        }
 
-    public static void logReq(HttpServletRequest request) {
         try {
-            logReqInner(request);
-        } catch (IOException e) {
+            logReqInner(request, logProperties);
+        } catch (Exception e) {
             log.error("输出请求: {} {}, 日志异常: ", request.getMethod(),
                     request.getRequestURI(), e);
         }
     }
 
-    private static void logReqInner(HttpServletRequest request) throws IOException {
+    private static void logReqInner(HttpServletRequest request, WebLogProperties.LogProperties logProperties) throws IOException {
         String path = request.getRequestURI();
         String method = request.getMethod();
-        String body = readRequestBody(request);
+        String query = request.getQueryString();
 
-        String queryString = request.getQueryString();
+        // 输出请求header
+        String header = StringUtils.EMPTY;
+        if (logProperties != null && CollectionUtils.isNotEmpty(logProperties.getLogReqHeader())) {
+            header = HttpRequestUtils.logHeaderStr(logProperties.getLogReqHeader(), request::getHeader);
+        }
 
-        log.info("Http请求 Path: {}, Method: {}, Params: {}, Body: {}",
-                path,
-                method,
-                queryString,
-                body);
+        String body = WebLogProperties.DISABLED_BODY_LOG_STR;
+        // 是否输出请求body
+        if (logProperties == null || !Boolean.TRUE.equals(logProperties.getDisableReqBody())) {
+            body = HttpRequestUtils.readRequestBody(request);
+        }
+
+        // 输出日志
+        logReqInner(path, method, query, header, body);
     }
 
-
-    private static String readRequestBody(HttpServletRequest request) throws IOException {
-
-        BufferedReader reader = request.getReader();
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line).append(LINE_SEPARATOR);
+    private static void logReqInner(String path, String method, String query, String header, String body) {
+        if (StringUtils.isNotEmpty(header)) {
+            log.info("Http请求 Path: {}, Method: {}, Params: {}, Header: {}, Body: {}",
+                    path,
+                    method,
+                    query,
+                    header,
+                    body);
+        } else {
+            log.info("Http请求 Path: {}, Method: {}, Params: {}, Body: {}",
+                    path,
+                    method,
+                    query,
+                    body);
         }
-        if (sb.length() > 0) {
-            return sb.substring(0, sb.length() - LINE_SEPARATOR.length());
-        }
-        return "";
     }
+
 
 }
