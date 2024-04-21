@@ -22,3 +22,31 @@ web:
         log:
           log-req-header: Content-Type,Content-Length
           log-resp-header: Content-Type
+      - path: /user/sign-in
+        methods: POST
+        sensitization:
+          - logger: org.example.springbootdemo.support.HttpReqLogger
+            sensitization-fields:
+                # 匹配: fullName
+              - patten: (fullName)("\s*:\s*"|=)([\u4e00-\u9fa5]{1})([\u4e00-\u9fa5]*)
+                replace: $1$2$3**
+              - patten: (phoneNo)("\s*:\s*"|=)(\d{3})\d{4}(\d{4})
+                replace: $1$2$3****$4
+              - patten: (idNo)("\s*:\s*"|=)(\d{6})\d{8,11}(\w{1})
+                replace: $1$2$3**************$4
+              - patten: (password)("\s*:\s*"|=).*?(?=("|,|&))
+                replace: $1$2******
+              - patten: (bankCardNo)("\s*:\s*"|=)(\d{4})\d{5,11}(\w{4})
+                replace: $1$2$3**************$4
+          - logger: org.example.springbootdemo.controller.UserController
+            sensitization-fields:
+              - patten: (fullName)("\s*:\s*"|=)([\u4e00-\u9fa5]{1})([\u4e00-\u9fa5]*)
+                replace: $1$2$3**
+              - patten: (phoneNo)("\s*:\s*"|=)(\d{3})\d{4}(\d{4})
+                replace: $1$2$3****$4
+              - patten: (idNo)("\s*:\s*"|=)(\d{6})\d{8,11}(\w{1})
+                replace: $1$2$3**************$4
+              - patten: (password)("\s*:\s*"|=).*?(?=("|,|&))
+                replace: $1$2******
+              - patten: (bankCardNo)("\s*:\s*"|=)(\d{4})\d{5,11}(\w{4})
+                replace: $1$2$3**************$4

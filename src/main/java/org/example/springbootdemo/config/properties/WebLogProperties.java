@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -50,6 +51,10 @@ public class WebLogProperties {
          */
         private LogProperties log;
 
+        /**
+         * logger脱敏相关配置
+         */
+        private List<LoggerSensitizationProperties> sensitization;
 
     }
 
@@ -91,6 +96,44 @@ public class WebLogProperties {
         private Set<String> logRespHeader;
 
 
+    }
+
+
+    /**
+     * 脱敏相关配置
+     */
+    @Data
+    public static class LoggerSensitizationProperties {
+
+        /**
+         * 日志 logger名称
+         */
+        private String logger;
+
+        /**
+         * 脱敏规则
+         */
+        private List<SensitizationFieldPatten> sensitizationFields;
+
+
+    }
+
+
+    /**
+     * 脱敏规则
+     */
+    @Data
+    public static class SensitizationFieldPatten {
+
+        /**
+         * 匹配正则
+         */
+        private Pattern patten;
+
+        /**
+         * 替换方式
+         */
+        private String replace;
     }
 
 }

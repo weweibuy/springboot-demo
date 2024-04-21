@@ -5,11 +5,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.example.springbootdemo.config.properties.WebLogProperties;
 import org.example.springbootdemo.support.CopyContentCachingRequestWrapper;
 import org.example.springbootdemo.support.HttpReqLogger;
 import org.example.springbootdemo.support.HttpRespLogger;
+import org.example.springbootdemo.support.LogSensitizationContext;
 import org.example.springbootdemo.utils.HttpRequestUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -52,6 +55,14 @@ public class LogRequestFilter extends OncePerRequestFilter {
                 httpPathProperties.map(WebLogProperties.HttpPathProperties::getLog)
                         .orElse(null);
 
+        // 脱敏配置
+        List<WebLogProperties.LoggerSensitizationProperties> sensitizationPropertiesList = httpPathProperties.
+                map(WebLogProperties.HttpPathProperties::getSensitization)
+                .orElse(null);
+
+        // 绑定脱敏配置
+        bindSensitizationContext(sensitizationPropertiesList);
+
         // 输出请求日志
         HttpReqLogger.logReq(request, logProperties);
         long reqTimeMillis = System.currentTimeMillis();
@@ -61,6 +72,9 @@ public class LogRequestFilter extends OncePerRequestFilter {
             // 输出响应日志
             HttpRespLogger.logResp(responseWrapper, reqTimeMillis, logProperties);
         } finally {
+            // 清除绑定的脱敏配置
+            clearSensitizationContext(sensitizationPropertiesList);
+
             // 缓存流写入到原始响应流中
             responseWrapper.copyBodyToResponse();
         }
@@ -81,6 +95,23 @@ public class LogRequestFilter extends OncePerRequestFilter {
                         // 路径匹配
                         .filter(h -> HttpRequestUtils.isMatchPath(h.getPath(), path))
                         .findFirst());
+    }
+
+
+    private void bindSensitizationContext(List<WebLogProperties.LoggerSensitizationProperties> sensitizationPropertiesList) {
+        if (CollectionUtils.isEmpty(sensitizationPropertiesList)) {
+            return;
+        }
+        LogSensitizationContext.setContext(sensitizationPropertiesList);
+
+    }
+
+    private void clearSensitizationContext(List<WebLogProperties.LoggerSensitizationProperties> sensitizationPropertiesList) {
+        if (CollectionUtils.isEmpty(sensitizationPropertiesList)) {
+            return;
+        }
+        LogSensitizationContext.clearContext();
+
     }
 
 
