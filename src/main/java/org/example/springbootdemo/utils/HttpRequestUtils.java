@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * @date 2024/3/30
  **/
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class HttpRequestUtils {
 
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -80,6 +80,9 @@ public final class HttpRequestUtils {
      * @throws IOException
      */
     public static String readRequestBody(HttpServletRequest request) throws IOException {
+        if (!HttpRequestUtils.isIncludePayload(request)) {
+            return "";
+        }
 
         BufferedReader reader = request.getReader();
         StringBuilder sb = new StringBuilder();
