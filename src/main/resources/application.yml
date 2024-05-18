@@ -3,6 +3,11 @@ spring:
     active: ${mvn.profile.active}
   application:
     name: demo-application
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+
 
 web:
   log:
