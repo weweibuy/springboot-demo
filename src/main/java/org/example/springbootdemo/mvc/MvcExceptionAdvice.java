@@ -17,6 +17,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -91,6 +92,21 @@ public class MvcExceptionAdvice {
         } else {
             msg = e.getFieldError().getDefaultMessage();
         }
+        return builderResponse(HttpStatus.BAD_REQUEST)
+                .body(CommonCodeResponseDTO.response(ResponseCodeEum.BAD_REQUEST_PARAM.getCode(), msg));
+    }
+
+    /**
+     *
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<CommonCodeResponseDTO> handler(HandlerMethodValidationException e) {
+        Object[] detailMessageArguments = e.getDetailMessageArguments();
+        String msg = detailMessageArguments[0].toString();
+        log.warn("输入参数错误: {}", msg);
+
         return builderResponse(HttpStatus.BAD_REQUEST)
                 .body(CommonCodeResponseDTO.response(ResponseCodeEum.BAD_REQUEST_PARAM.getCode(), msg));
     }

@@ -3,14 +3,18 @@ package org.example.springbootdemo.controller;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.example.springbootdemo.model.dto.resp.CommonCodeResponseDTO;
+import org.example.springbootdemo.support.validate.annotation.Scale;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -57,6 +61,13 @@ public class DemoController {
         demoDate.setCustomLocalDateTime(LocalDateTime.now());
         demoDate.setCustomDate(new Date());
         return demoDate;
+    }
+
+
+    @GetMapping("/validate")
+    public CommonCodeResponseDTO validate(@Valid @Scale(max = 2)
+                                          @RequestParam("amount") BigDecimal amount) {
+        return CommonCodeResponseDTO.success();
     }
 
     @Data
