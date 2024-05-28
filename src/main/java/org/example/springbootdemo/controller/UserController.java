@@ -5,13 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.springbootdemo.controller.dto.req.UserLoginReqDTO;
 import org.example.springbootdemo.controller.dto.req.UserSignReqDTO;
+import org.example.springbootdemo.controller.dto.resp.UserRespDTO;
 import org.example.springbootdemo.controller.dto.resp.UserSignRespDTO;
 import org.example.springbootdemo.model.dto.resp.CommonCodeResponseDTO;
 import org.example.springbootdemo.support.ValidateHelper;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @date 2024/4/20
@@ -45,6 +43,19 @@ public class UserController {
 
         log.info("用户登录成功, 用户: {}", loginReq);
         return CommonCodeResponseDTO.success();
+    }
+
+
+    @GetMapping("/query")
+    public UserRespDTO queryUser() {
+        UserRespDTO userRespDTO = new UserRespDTO();
+        userRespDTO.setUsername("my_username");
+        userRespDTO.setFullName("张三丰");
+        userRespDTO.setPhoneNo("13800000000");
+        userRespDTO.setIdNo("110101199109146678");
+        userRespDTO.setPassword("123QWErt:?!@#$");
+        userRespDTO.setBankCardNo("6222352637685542580");
+        return userRespDTO;
     }
 
 
