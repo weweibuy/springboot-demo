@@ -55,3 +55,6 @@ web:
                 replace: $1$2******
               - patten: (bankCardNo)("\s*:\s*"|=)(\d{4})\d{5,11}(\w{4})
                 replace: $1$2$3**************$4
+  rsa:
+    private-key-path: classpath:key/rsa_private_key.pem
+    public-key-path: classpath:key/rsa_public_key.pem
