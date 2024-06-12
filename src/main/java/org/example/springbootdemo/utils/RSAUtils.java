@@ -37,7 +37,7 @@ public final class RSAUtils {
 
     public static final String SHA_256 = "SHA-256";
 
-    public static final String SHA_1 = "SHA-256";
+    public static final String SHA_1 = "SHA-1";
 
     public static final String MGF1 = "MGF1";
 
