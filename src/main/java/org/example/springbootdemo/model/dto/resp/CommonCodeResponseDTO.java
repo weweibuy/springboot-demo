@@ -32,4 +32,9 @@ public class CommonCodeResponseDTO implements ResponseCodeAndMsg {
         return new CommonCodeResponseDTO(code, msg);
     }
 
+
+    public static CommonCodeResponseDTO response(ResponseCodeAndMsg responseCodeAndMsg, String msg) {
+        return new CommonCodeResponseDTO(responseCodeAndMsg.getCode(), msg);
+    }
+
 }

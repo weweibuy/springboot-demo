@@ -27,6 +27,11 @@ public enum ResponseCodeEum implements ResponseCodeAndMsg {
 
     NOT_FOUND("6", "请求地址不存在"),
 
+    BAD_REQUEST_SIGN("7", "请求签名错误"),
+
+    BAD_REQUEST_RESP_SIGN("8", "响应签名错误"),
+
+
     ;
 
     private final String code;

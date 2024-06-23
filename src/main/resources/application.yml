@@ -27,6 +27,11 @@ web:
         log:
           log-req-header: Content-Type,Content-Length
           log-resp-header: Content-Type
+      - path: /open/sign-demo
+        methods: POST
+        log:
+          log-req-header: X-App-Id,X-Nonce,X-Timestamp,X-Signature
+          log-resp-header: X-Nonce,X-Timestamp,X-Signature
       - path: /user/sign-in
         methods: POST
         sensitization:
@@ -58,3 +63,12 @@ web:
   rsa:
     private-key-path: classpath:key/rsa_private_key.pem
     public-key-path: classpath:key/rsa_public_key.pem
+
+  sign:
+    client-key:
+      "app_id_001":
+        key-path: classpath:sign/client/client_rsa_key.pem
+    server-key:
+      key-path: classpath:sign/server/server.pfx
+      key-password: 123456
+      cer-path: classpath:sign/client/server.cer
