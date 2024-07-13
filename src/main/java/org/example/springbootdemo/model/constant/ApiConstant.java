@@ -18,4 +18,12 @@ public interface ApiConstant {
 
     String HEADER_SIGNATURE = "X-Signature";
 
+    String INNER_PATH = "/inner";
+
+    String INNER_PATH_PATTEN = "/inner/**";
+
+    String HEADER_AUTHORIZATION = "Authorization";
+
+    String AUTHORIZATION_BEARER_TOKEN = "Bearer";
+
 }

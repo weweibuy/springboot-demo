@@ -72,3 +72,6 @@ web:
       key-path: classpath:sign/server/server.pfx
       key-password: 123456
       cer-path: classpath:sign/client/server.cer
+  jwt:
+    private-key-path: classpath:jwt/rsa_private_key.pem
+    public-key-path: classpath:jwt/rsa_public_key.pem

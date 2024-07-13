@@ -31,6 +31,8 @@ public enum ResponseCodeEum implements ResponseCodeAndMsg {
 
     BAD_REQUEST_RESP_SIGN("8", "响应签名错误"),
 
+    UNAUTHORIZED("9", "请求未授权"),
+
 
     ;
 

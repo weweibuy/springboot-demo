@@ -3,14 +3,16 @@ package org.example.springbootdemo.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.springbootdemo.config.properties.WebJwtProperties;
 import org.example.springbootdemo.config.properties.WebRSAProperties;
 import org.example.springbootdemo.controller.dto.req.UserLoginReqDTO;
 import org.example.springbootdemo.controller.dto.req.UserSignReqDTO;
 import org.example.springbootdemo.controller.dto.resp.UserRespDTO;
 import org.example.springbootdemo.controller.dto.resp.UserSignRespDTO;
-import org.example.springbootdemo.model.dto.resp.CommonCodeResponseDTO;
+import org.example.springbootdemo.model.dto.resp.UserLoginRespDTO;
 import org.example.springbootdemo.model.exception.BusinessException;
 import org.example.springbootdemo.support.ValidateHelper;
+import org.example.springbootdemo.utils.JwtUtils;
 import org.example.springbootdemo.utils.RSAUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +31,7 @@ public class UserController {
 
     private final WebRSAProperties webRSAProperties;
 
+    private final WebJwtProperties webJwtProperties;
 
     @PostMapping("/sign-in")
     public UserSignRespDTO signIn(@RequestBody UserSignReqDTO signReq) {
@@ -49,7 +52,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public CommonCodeResponseDTO login(@Valid @RequestBody UserLoginReqDTO loginReq) {
+    public UserLoginRespDTO login(@Valid @RequestBody UserLoginReqDTO loginReq) {
 
         Class group = null;
         if (loginReq.getLoginType() == 1) {
@@ -60,9 +63,11 @@ public class UserController {
 
         validateHelper.validate(loginReq, group);
 
-
-        log.info("用户登录成功, 用户: {}", loginReq);
-        return CommonCodeResponseDTO.success();
+        // 生成JWT
+        String token = JwtUtils.generateToken(webJwtProperties, loginReq.getUsername());
+        UserLoginRespDTO userLoginRespDTO = new UserLoginRespDTO();
+        userLoginRespDTO.setToken(token);
+        return userLoginRespDTO;
     }
 
 
