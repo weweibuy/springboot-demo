@@ -9,8 +9,10 @@ import org.example.springbootdemo.controller.dto.req.UserLoginReqDTO;
 import org.example.springbootdemo.controller.dto.req.UserSignReqDTO;
 import org.example.springbootdemo.controller.dto.resp.UserRespDTO;
 import org.example.springbootdemo.controller.dto.resp.UserSignRespDTO;
+import org.example.springbootdemo.mapper.UserMapper;
 import org.example.springbootdemo.model.dto.resp.UserLoginRespDTO;
 import org.example.springbootdemo.model.exception.BusinessException;
+import org.example.springbootdemo.model.po.User;
 import org.example.springbootdemo.support.ValidateHelper;
 import org.example.springbootdemo.utils.JwtUtils;
 import org.example.springbootdemo.utils.RSAUtils;
@@ -33,6 +35,8 @@ public class UserController {
 
     private final WebJwtProperties webJwtProperties;
 
+    private final UserMapper userMapper;
+
     @PostMapping("/sign-in")
     public UserSignRespDTO signIn(@RequestBody UserSignReqDTO signReq) {
         log.info("注册用户信息: {}", signReq);
@@ -45,9 +49,14 @@ public class UserController {
         } catch (Exception e) {
             throw BusinessException.badParam("加密数据错误", e);
         }
+
+        User user = signReq.toUser(idNo);
+        userMapper.insertSelective(user);
+
         log.info("身份证号: {}", idNo);
         UserSignRespDTO signResp = signReq.toSignResp();
         signResp.setIdNo(idNo);
+        signResp.setId(user.getId());
         return signResp;
     }
 

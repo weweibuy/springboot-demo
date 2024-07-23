@@ -8,6 +8,8 @@ import lombok.Data;
 @Data
 public class UserSignRespDTO {
 
+    private Long id;
+
     private String username;
 
     private String fullName;

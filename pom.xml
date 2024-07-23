@@ -79,6 +79,21 @@
             <version>4.4.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>3.0.3</version>
+        </dependency>
 
     </dependencies>
 
@@ -126,6 +141,39 @@
             <properties>
                 <mvn.profile.active>dev</mvn.profile.active>
             </properties>
+            <build>
+                <plugins>
+                    <!--mybatis代码生成器-->
+                    <plugin>
+                        <groupId>org.mybatis.generator</groupId>
+                        <artifactId>mybatis-generator-maven-plugin</artifactId>
+                        <version>1.3.7</version>
+                        <configuration>
+                            <!-- 重复文件进行覆盖-->
+                            <overwrite>true</overwrite>
+                            <!-- 是否输出详细的日志-->
+                            <verbose>true</verbose>
+                            <configurationFile>src/main/resources/generator/generatorConfig.xml</configurationFile>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>mysql</groupId>
+                                <artifactId>mysql-connector-java</artifactId>
+                                <version>8.0.31</version>
+                            </dependency>
+
+                            <!--  https://github.com/itfsw/mybatis-generator-plugin-->
+                            <dependency>
+                                <groupId>com.itfsw</groupId>
+                                <artifactId>mybatis-generator-plugin</artifactId>
+                                <version>1.3.2</version>
+                            </dependency>
+
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+
         </profile>
 
         <profile>

@@ -2,6 +2,7 @@ package org.example.springbootdemo.controller.dto.req;
 
 import lombok.Data;
 import org.example.springbootdemo.controller.dto.resp.UserSignRespDTO;
+import org.example.springbootdemo.model.po.User;
 
 /**
  * @date 2024/4/20
@@ -31,5 +32,16 @@ public class UserSignReqDTO {
         resp.setPassword(password);
         resp.setBankCardNo(bankCardNo);
         return resp;
+    }
+
+
+    public User toUser(String idNo) {
+        User user = new User();
+        user.setFullName(fullName);
+        user.setUserName(username);
+        user.setPhoneNo(phoneNo);
+        user.setPassword(password);
+        user.setIdNo(idNo);
+        return user;
     }
 }
