@@ -11,14 +11,18 @@ import org.example.springbootdemo.controller.dto.resp.UserRespDTO;
 import org.example.springbootdemo.controller.dto.resp.UserSignRespDTO;
 import org.example.springbootdemo.mapper.UserMapper;
 import org.example.springbootdemo.model.dto.resp.UserLoginRespDTO;
+import org.example.springbootdemo.model.eum.ResponseCodeEum;
+import org.example.springbootdemo.model.example.UserExample;
 import org.example.springbootdemo.model.exception.BusinessException;
 import org.example.springbootdemo.model.po.User;
 import org.example.springbootdemo.support.ValidateHelper;
+import org.example.springbootdemo.utils.BCryptUtils;
 import org.example.springbootdemo.utils.JwtUtils;
 import org.example.springbootdemo.utils.RSAUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.InvalidKeyException;
+import java.util.Optional;
 
 /**
  * @date 2024/4/20
@@ -72,10 +76,36 @@ public class UserController {
 
         validateHelper.validate(loginReq, group);
 
+        User user = null;
+        if (loginReq.getLoginType() == 1) {
+            user = Optional.ofNullable(userMapper.selectOneByExample(
+                            UserExample.newAndCreateCriteria()
+                                    .andDeletedEqualTo(false)
+                                    .andUserNameEqualTo(loginReq.getUsername())
+                                    .example()))
+                    .filter(u -> BCryptUtils.match(loginReq.getPassword(), u.getPassword()))
+                    .orElse(null);
+        } else if (loginReq.getLoginType() == 2) {
+            user = userMapper.selectOneByExample(
+                    UserExample.newAndCreateCriteria()
+                            .andDeletedEqualTo(false)
+                            .andPhoneNoEqualTo(loginReq.getPhoneNo())
+                            .example());
+        }
+        if (user == null) {
+            throw new BusinessException(ResponseCodeEum.LOGIN_IN_FAIL.getCode(),
+                    "登录信息错误");
+        }
+
         // 生成JWT
         String token = JwtUtils.generateToken(webJwtProperties, loginReq.getUsername());
         UserLoginRespDTO userLoginRespDTO = new UserLoginRespDTO();
         userLoginRespDTO.setToken(token);
+        userLoginRespDTO.setFullName(user.getFullName());
+        userLoginRespDTO.setUserName(user.getUserName());
+        userLoginRespDTO.setIdNo(user.getIdNo());
+        userLoginRespDTO.setPhoneNo(user.getPhoneNo());
+
         return userLoginRespDTO;
     }
 

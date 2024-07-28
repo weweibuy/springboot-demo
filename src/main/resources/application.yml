@@ -17,6 +17,7 @@ mybatis:
   mapper-locations: classpath*:mapper/*.xml
 
 
+
 web:
   log:
     http:
@@ -83,3 +84,7 @@ web:
   jwt:
     private-key-path: classpath:jwt/rsa_private_key.pem
     public-key-path: classpath:jwt/rsa_public_key.pem
+
+db:
+  encrypt:
+    aes-key: hsnl5n8r6zd8rt76tok05vmpun6y4nkc

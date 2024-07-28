@@ -33,6 +33,7 @@ public enum ResponseCodeEum implements ResponseCodeAndMsg {
 
     UNAUTHORIZED("9", "请求未授权"),
 
+    LOGIN_IN_FAIL("10", "登录失败"),
 
     ;
 

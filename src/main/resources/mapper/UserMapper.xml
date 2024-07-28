@@ -5,9 +5,9 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="full_name" jdbcType="VARCHAR" property="fullName" />
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="phone_no" jdbcType="VARCHAR" property="phoneNo" />
-    <result column="id_no" jdbcType="VARCHAR" property="idNo" />
+    <result column="password" jdbcType="VARCHAR" property="password" typeHandler="org.example.springbootdemo.support.BCryptEncryptMybatisTypeHandler" />
+    <result column="phone_no" jdbcType="VARCHAR" property="phoneNo" typeHandler="org.example.springbootdemo.support.AesEncryptMybatisTypeHandler" />
+    <result column="id_no" jdbcType="VARCHAR" property="idNo" typeHandler="org.example.springbootdemo.support.AesEncryptMybatisTypeHandler" />
     <result column="is_delete" jdbcType="TINYINT" property="deleted" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -32,6 +32,63 @@
                   and ${criterion.condition}
                   <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+            <foreach collection="criteria.passwordCriteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value,typeHandler=org.example.springbootdemo.support.BCryptEncryptMybatisTypeHandler}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value,typeHandler=org.example.springbootdemo.support.BCryptEncryptMybatisTypeHandler} and #{criterion.secondValue,typeHandler=org.example.springbootdemo.support.BCryptEncryptMybatisTypeHandler}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem,typeHandler=org.example.springbootdemo.support.BCryptEncryptMybatisTypeHandler}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+            <foreach collection="criteria.phoneNoCriteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler} and #{criterion.secondValue,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+            <foreach collection="criteria.idNoCriteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler} and #{criterion.secondValue,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler}
                   </foreach>
                 </when>
               </choose>
@@ -61,6 +118,63 @@
                   and ${criterion.condition}
                   <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
                     #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+            <foreach collection="criteria.passwordCriteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value,typeHandler=org.example.springbootdemo.support.BCryptEncryptMybatisTypeHandler}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value,typeHandler=org.example.springbootdemo.support.BCryptEncryptMybatisTypeHandler} and #{criterion.secondValue,typeHandler=org.example.springbootdemo.support.BCryptEncryptMybatisTypeHandler}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem,typeHandler=org.example.springbootdemo.support.BCryptEncryptMybatisTypeHandler}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+            <foreach collection="criteria.phoneNoCriteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler} and #{criterion.secondValue,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+            <foreach collection="criteria.idNoCriteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler} and #{criterion.secondValue,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler}
                   </foreach>
                 </when>
               </choose>
@@ -113,11 +227,15 @@
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.example.springbootdemo.model.po.User" useGeneratedKeys="true">
     insert into demo_user (full_name, user_name, password, 
-      phone_no, id_no, is_delete, 
-      create_time, update_time)
-    values (#{fullName,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{phoneNo,jdbcType=VARCHAR}, #{idNo,jdbcType=VARCHAR}, #{deleted,jdbcType=TINYINT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+      phone_no, 
+      id_no, 
+      is_delete, create_time, update_time
+      )
+    values (#{fullName,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.BCryptEncryptMybatisTypeHandler}, 
+      #{phoneNo,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler}, 
+      #{idNo,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler}, 
+      #{deleted,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.example.springbootdemo.model.po.User" useGeneratedKeys="true">
     insert into demo_user
@@ -155,13 +273,13 @@
         #{userName,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
-        #{password,jdbcType=VARCHAR},
+        #{password,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.BCryptEncryptMybatisTypeHandler},
       </if>
       <if test="phoneNo != null">
-        #{phoneNo,jdbcType=VARCHAR},
+        #{phoneNo,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler},
       </if>
       <if test="idNo != null">
-        #{idNo,jdbcType=VARCHAR},
+        #{idNo,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler},
       </if>
       <if test="deleted != null">
         #{deleted,jdbcType=TINYINT},
@@ -193,13 +311,13 @@
         user_name = #{record.userName,jdbcType=VARCHAR},
       </if>
       <if test="record.password != null">
-        password = #{record.password,jdbcType=VARCHAR},
+        password = #{record.password,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.BCryptEncryptMybatisTypeHandler},
       </if>
       <if test="record.phoneNo != null">
-        phone_no = #{record.phoneNo,jdbcType=VARCHAR},
+        phone_no = #{record.phoneNo,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler},
       </if>
       <if test="record.idNo != null">
-        id_no = #{record.idNo,jdbcType=VARCHAR},
+        id_no = #{record.idNo,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler},
       </if>
       <if test="record.deleted != null">
         is_delete = #{record.deleted,jdbcType=TINYINT},
@@ -220,9 +338,9 @@
     set id = #{record.id,jdbcType=BIGINT},
       full_name = #{record.fullName,jdbcType=VARCHAR},
       user_name = #{record.userName,jdbcType=VARCHAR},
-      password = #{record.password,jdbcType=VARCHAR},
-      phone_no = #{record.phoneNo,jdbcType=VARCHAR},
-      id_no = #{record.idNo,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.BCryptEncryptMybatisTypeHandler},
+      phone_no = #{record.phoneNo,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler},
+      id_no = #{record.idNo,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler},
       is_delete = #{record.deleted,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
@@ -240,13 +358,13 @@
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
-        password = #{password,jdbcType=VARCHAR},
+        password = #{password,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.BCryptEncryptMybatisTypeHandler},
       </if>
       <if test="phoneNo != null">
-        phone_no = #{phoneNo,jdbcType=VARCHAR},
+        phone_no = #{phoneNo,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler},
       </if>
       <if test="idNo != null">
-        id_no = #{idNo,jdbcType=VARCHAR},
+        id_no = #{idNo,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler},
       </if>
       <if test="deleted != null">
         is_delete = #{deleted,jdbcType=TINYINT},
@@ -264,9 +382,9 @@
     update demo_user
     set full_name = #{fullName,jdbcType=VARCHAR},
       user_name = #{userName,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      phone_no = #{phoneNo,jdbcType=VARCHAR},
-      id_no = #{idNo,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.BCryptEncryptMybatisTypeHandler},
+      phone_no = #{phoneNo,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler},
+      id_no = #{idNo,jdbcType=VARCHAR,typeHandler=org.example.springbootdemo.support.AesEncryptMybatisTypeHandler},
       is_delete = #{deleted,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}

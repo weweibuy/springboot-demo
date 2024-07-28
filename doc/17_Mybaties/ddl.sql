@@ -4,7 +4,7 @@ CREATE TABLE `demo_user` (
   `user_name` varchar(20) NOT NULL COMMENT '用户名',
   `password` varchar(200) NOT NULL COMMENT '密码',
   `phone_no` varchar(150) NOT NULL DEFAULT '' COMMENT '手机号',
-  `id_no` varchar(20) NOT NULL COMMENT '身份证号',
+  `id_no` varchar(200) NOT NULL COMMENT '身份证号',
   `is_delete` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否删除',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',

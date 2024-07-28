@@ -9,6 +9,6 @@ import org.springframework.context.annotation.Configuration;
  **/
 @Configuration
 @EnableConfigurationProperties({WebLogProperties.class, WebJacksonProperties.class,
-        WebRSAProperties.class, WebSignProperties.class, WebJwtProperties.class})
+        WebRSAProperties.class, WebSignProperties.class, WebJwtProperties.class, DBEncryptProperties.class})
 public class DemoApplicationWebMvcConfig {
 }

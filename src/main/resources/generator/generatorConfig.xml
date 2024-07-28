@@ -63,6 +63,9 @@
         <table tableName="demo_user" domainObjectName="User">
             <generatedKey identity="true" column="id" sqlStatement="JDBC"/>
             <columnOverride column="is_delete" property="deleted" javaType="Boolean"/>
+            <columnOverride column="password" typeHandler="org.example.springbootdemo.support.BCryptEncryptMybatisTypeHandler" />
+            <columnOverride column="phone_no" typeHandler="org.example.springbootdemo.support.AesEncryptMybatisTypeHandler" />
+            <columnOverride column="id_no" typeHandler="org.example.springbootdemo.support.AesEncryptMybatisTypeHandler" />
         </table>
 
 
