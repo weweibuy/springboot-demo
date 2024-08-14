@@ -14,14 +14,18 @@ import org.example.springbootdemo.model.dto.resp.UserLoginRespDTO;
 import org.example.springbootdemo.model.eum.ResponseCodeEum;
 import org.example.springbootdemo.model.example.UserExample;
 import org.example.springbootdemo.model.exception.BusinessException;
+import org.example.springbootdemo.model.midpo.VipUser;
 import org.example.springbootdemo.model.po.User;
+import org.example.springbootdemo.service.UserService;
 import org.example.springbootdemo.support.ValidateHelper;
 import org.example.springbootdemo.utils.BCryptUtils;
 import org.example.springbootdemo.utils.JwtUtils;
 import org.example.springbootdemo.utils.RSAUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.InvalidKeyException;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -40,6 +44,8 @@ public class UserController {
     private final WebJwtProperties webJwtProperties;
 
     private final UserMapper userMapper;
+
+    private final UserService userService;
 
     @PostMapping("/sign-in")
     public UserSignRespDTO signIn(@RequestBody UserSignReqDTO signReq) {
@@ -111,14 +117,39 @@ public class UserController {
 
 
     @GetMapping("/query")
-    public UserRespDTO queryUser() {
+    public UserRespDTO queryUser(@RequestParam("username") String username,
+                                 @RequestParam(value = "ds", required = false) String ds) {
+        User user = null;
+        if (Objects.equals(ds, "backup")) {
+            user = userService.queryUserWithSpecDs(username);
+        } else {
+            user = userService.queryUser(username);
+        }
+
         UserRespDTO userRespDTO = new UserRespDTO();
-        userRespDTO.setUsername("my_username");
-        userRespDTO.setFullName("张三丰");
-        userRespDTO.setPhoneNo("13800000000");
-        userRespDTO.setIdNo("110101199109146678");
-        userRespDTO.setPassword("123QWErt:?!@#$");
-        userRespDTO.setBankCardNo("6222352637685542580");
+        if (user != null) {
+            BeanUtils.copyProperties(user, userRespDTO);
+            userRespDTO.setUsername(user.getUserName());
+        }
+        return userRespDTO;
+    }
+
+    @GetMapping("/user2vip")
+    public UserRespDTO userToVip(@RequestParam("username") String username,
+                                 @RequestParam(value = "ex", required = false) Boolean ex) {
+
+        User user = userService.queryUser(username);
+        VipUser vipUser = new VipUser();
+        UserRespDTO userRespDTO = new UserRespDTO();
+
+        if (user != null) {
+            BeanUtils.copyProperties(user, vipUser);
+
+            userService.insertVipUser(vipUser, ex);
+
+            BeanUtils.copyProperties(user, userRespDTO);
+        }
+
         return userRespDTO;
     }
 
